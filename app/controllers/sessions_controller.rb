@@ -3,28 +3,29 @@ class SessionsController < ApplicationController
   end
 
   def create
-    email = params[:email]&.downcase&.strip
-    # Note: password and zip_code parameters intentionally ignored per requirements
+    user = User.find_or_create_by(email: session_params[:email])
 
-    if email.present?
-      user = User.find_or_create_by(email: email)
-
-      if user.persisted?
-        session[:user_email] = user.email
-        # TODO: Redirect to voting page once implemented in Stage 7
-        redirect_to root_path, notice: 'Successfully logged in!'
-      else
-        flash.now[:alert] = user.errors.full_messages.join(', ')
-        render :new, status: :unprocessable_entity
-      end
+    if user.persisted?
+      session[:user_email] = user.email
+      redirect_to root_path, notice: 'Successfully logged in!'
     else
-      flash.now[:alert] = 'Email is required'
+      flash.now[:alert] = user.errors.full_messages.join(', ')
       render :new, status: :unprocessable_entity
     end
+  rescue ActionController::ParameterMissing => e
+    flash.now[:alert] = "#{e.param.to_s.humanize} is required"
+    render :new, status: :unprocessable_entity
   end
 
   def destroy
     session[:user_email] = nil
     redirect_to root_path, notice: 'Successfully logged out!'
+  end
+
+  private
+
+  def session_params
+    params.require(:email)
+    { email: params.require(:email).downcase.strip }
   end
 end
