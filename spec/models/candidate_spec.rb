@@ -24,8 +24,8 @@ RSpec.describe Candidate, type: :model do
   describe 'associations' do
     it 'has many voters through voted_for_candidate_id' do
       candidate = Candidate.create!(name: 'Billie Eilish')
-      user1 = User.create!(email: 'voter1@example.com', zip_code: '12345', voted_for_candidate: candidate)
-      user2 = User.create!(email: 'voter2@example.com', zip_code: '54321', voted_for_candidate: candidate)
+      user1 = User.create!(email: 'voter1@example.com', voted_for_candidate: candidate)
+      user2 = User.create!(email: 'voter2@example.com', voted_for_candidate: candidate)
       
       expect(candidate.voters).to include(user1, user2)
       expect(candidate.voters.count).to eq(2)
@@ -46,7 +46,7 @@ RSpec.describe Candidate, type: :model do
     it 'returns the correct count when users have voted' do
       candidate = Candidate.create!(name: 'Drake')
       3.times do |i|
-        User.create!(email: "voter#{i}@example.com", zip_code: '12345', voted_for_candidate: candidate)
+        User.create!(email: "voter#{i}@example.com", voted_for_candidate: candidate)
       end
       
       expect(candidate.vote_count).to eq(3)
@@ -56,16 +56,16 @@ RSpec.describe Candidate, type: :model do
       candidate = Candidate.create!(name: 'Ariana Grande')
       expect(candidate.vote_count).to eq(0)
       
-      User.create!(email: 'voter@example.com', zip_code: '12345', voted_for_candidate: candidate)
+      User.create!(email: 'voter@example.com', voted_for_candidate: candidate)
       expect(candidate.vote_count).to eq(1)
       
-      User.create!(email: 'voter2@example.com', zip_code: '54321', voted_for_candidate: candidate)
+      User.create!(email: 'voter2@example.com', voted_for_candidate: candidate)
       expect(candidate.vote_count).to eq(2)
     end
     
     it 'decreases when votes are removed' do
       candidate = Candidate.create!(name: 'The Weeknd')
-      user = User.create!(email: 'voter@example.com', zip_code: '12345', voted_for_candidate: candidate)
+      user = User.create!(email: 'voter@example.com', voted_for_candidate: candidate)
       
       expect(candidate.vote_count).to eq(1)
       
@@ -77,7 +77,7 @@ RSpec.describe Candidate, type: :model do
   describe 'when candidate is destroyed' do
     it 'nullifies the voted_for_candidate_id on associated users' do
       candidate = Candidate.create!(name: 'Post Malone')
-      user = User.create!(email: 'voter@example.com', zip_code: '12345', voted_for_candidate: candidate)
+      user = User.create!(email: 'voter@example.com', voted_for_candidate: candidate)
       
       expect(user.voted_for_candidate_id).to eq(candidate.id)
       
