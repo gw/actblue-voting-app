@@ -13,7 +13,7 @@ RSpec.describe "Sessions", type: :request do
       it "logs in an existing user" do
         user = User.create!(email: 'test@example.com')
         
-        post login_path, params: { email: 'test@example.com', zip_code: '12345' }
+        post login_path, params: { email: 'test@example.com' }
         
         expect(response).to redirect_to(root_path)
         expect(session[:user_email]).to eq('test@example.com')
@@ -22,7 +22,7 @@ RSpec.describe "Sessions", type: :request do
 
       it "creates and logs in a new user" do
         expect {
-          post login_path, params: { email: 'new@example.com', zip_code: '54321' }
+          post login_path, params: { email: 'new@example.com' }
         }.to change(User, :count).by(1)
         
         expect(response).to redirect_to(root_path)
@@ -31,10 +31,30 @@ RSpec.describe "Sessions", type: :request do
       end
 
       it "handles case insensitive email and strips whitespace" do
-        post login_path, params: { email: '  TEST@EXAMPLE.COM  ', zip_code: ' 12345 ' }
+        post login_path, params: { email: '  TEST@EXAMPLE.COM  ' }
         
         expect(response).to redirect_to(root_path)
         expect(session[:user_email]).to eq('test@example.com')
+      end
+
+      it "ignores zip_code when logging in existing user" do
+        user = User.create!(email: 'test@example.com')
+        
+        post login_path, params: { email: 'test@example.com', zip_code: '12345' }
+        
+        expect(response).to redirect_to(root_path)
+        expect(session[:user_email]).to eq('test@example.com')
+        expect(flash[:notice]).to eq('Successfully logged in!')
+      end
+
+      it "ignores zip_code when creating new user" do
+        expect {
+          post login_path, params: { email: 'new@example.com', zip_code: '54321' }
+        }.to change(User, :count).by(1)
+        
+        expect(response).to redirect_to(root_path)
+        expect(session[:user_email]).to eq('new@example.com')
+        expect(flash[:notice]).to eq('Successfully logged in!')
       end
     end
 
@@ -48,7 +68,7 @@ RSpec.describe "Sessions", type: :request do
       end
 
       it "renders error when email format is invalid" do
-        post login_path, params: { email: 'invalid-email', zip_code: '12345' }
+        post login_path, params: { email: 'invalid-email' }
         
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include('Email is invalid')
@@ -62,7 +82,7 @@ RSpec.describe "Sessions", type: :request do
       user = User.create!(email: 'test@example.com')
       
       # Log in first
-      post login_path, params: { email: 'test@example.com', zip_code: '12345' }
+      post login_path, params: { email: 'test@example.com' }
       expect(session[:user_email]).to eq('test@example.com')
       
       # Then log out
@@ -82,7 +102,7 @@ RSpec.describe "Sessions", type: :request do
 
     it "current_user returns user when logged in" do
       user = User.create!(email: 'test@example.com')
-      post login_path, params: { email: 'test@example.com', zip_code: '12345' }
+      post login_path, params: { email: 'test@example.com' }
       
       get root_path
       expect(controller.send(:current_user)).to eq(user)
@@ -95,7 +115,7 @@ RSpec.describe "Sessions", type: :request do
 
     it "logged_in? returns true when logged in" do
       user = User.create!(email: 'test@example.com')
-      post login_path, params: { email: 'test@example.com', zip_code: '12345' }
+      post login_path, params: { email: 'test@example.com' }
       
       get root_path
       expect(controller.send(:logged_in?)).to be true
