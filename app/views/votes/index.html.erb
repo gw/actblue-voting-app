@@ -1,0 +1,5 @@
+<% content_for :title, "Cast Your Vote" %>
+
+<%= react_component "Vote", { 
+  userEmail: current_user&.email
+} %>

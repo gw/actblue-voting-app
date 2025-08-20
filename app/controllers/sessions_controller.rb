@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
 
     if user.persisted?
       session[:user_email] = user.email
-      render json: { redirect_url: root_path }, status: :ok
+      render json: { redirect_url: votes_path }, status: :ok
     else
       error_messages = user.errors.full_messages
       render json: { errors: error_messages }, status: :unprocessable_entity
@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_email] = nil
-    redirect_to root_path, notice: 'Successfully logged out!'
+    redirect_to root_path
   end
 
   private

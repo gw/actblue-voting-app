@@ -15,9 +15,9 @@ RSpec.describe "Sessions", type: :request do
         
         post login_path, params: { email: 'test@example.com' }
         
-        expect(response).to redirect_to(root_path)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['redirect_url']).to eq(votes_path)
         expect(session[:user_email]).to eq('test@example.com')
-        expect(flash[:notice]).to eq('Successfully logged in!')
       end
 
       it "creates and logs in a new user" do
@@ -25,15 +25,16 @@ RSpec.describe "Sessions", type: :request do
           post login_path, params: { email: 'new@example.com' }
         }.to change(User, :count).by(1)
         
-        expect(response).to redirect_to(root_path)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['redirect_url']).to eq(votes_path)
         expect(session[:user_email]).to eq('new@example.com')
-        expect(flash[:notice]).to eq('Successfully logged in!')
       end
 
       it "handles case insensitive email and strips whitespace" do
         post login_path, params: { email: '  TEST@EXAMPLE.COM  ' }
         
-        expect(response).to redirect_to(root_path)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['redirect_url']).to eq(votes_path)
         expect(session[:user_email]).to eq('test@example.com')
       end
 
@@ -42,9 +43,9 @@ RSpec.describe "Sessions", type: :request do
         
         post login_path, params: { email: 'test@example.com', zip_code: '12345' }
         
-        expect(response).to redirect_to(root_path)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['redirect_url']).to eq(votes_path)
         expect(session[:user_email]).to eq('test@example.com')
-        expect(flash[:notice]).to eq('Successfully logged in!')
       end
 
       it "ignores zip_code when creating new user" do
@@ -52,9 +53,9 @@ RSpec.describe "Sessions", type: :request do
           post login_path, params: { email: 'new@example.com', zip_code: '54321' }
         }.to change(User, :count).by(1)
         
-        expect(response).to redirect_to(root_path)
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['redirect_url']).to eq(votes_path)
         expect(session[:user_email]).to eq('new@example.com')
-        expect(flash[:notice]).to eq('Successfully logged in!')
       end
     end
 
@@ -90,7 +91,6 @@ RSpec.describe "Sessions", type: :request do
       
       expect(response).to redirect_to(root_path)
       expect(session[:user_email]).to be_nil
-      expect(flash[:notice]).to eq('Successfully logged out!')
     end
   end
 

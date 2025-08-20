@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
+  # Voting routes
+  resources :votes, only: [:index]
+
   # Defines the root path route ("/")
   root "sessions#new"
 end
