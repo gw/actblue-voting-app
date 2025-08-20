@@ -7,14 +7,14 @@ class SessionsController < ApplicationController
 
     if user.persisted?
       session[:user_email] = user.email
-      redirect_to root_path, notice: 'Successfully logged in!'
+      render json: { redirect_url: root_path }, status: :ok
     else
-      flash.now[:alert] = user.errors.full_messages.join(', ')
-      render :new, status: :unprocessable_entity
+      error_messages = user.errors.full_messages
+      render json: { errors: error_messages }, status: :unprocessable_entity
     end
   rescue ActionController::ParameterMissing => e
-    flash.now[:alert] = "#{e.param.to_s.humanize} is required"
-    render :new, status: :unprocessable_entity
+    error_message = "#{e.param.to_s.humanize} is required"
+    render json: { errors: [error_message] }, status: :unprocessable_entity
   end
 
   def destroy
