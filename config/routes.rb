@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   # Voting routes
   resources :votes, only: [:index]
 
+  # Results routes (public, unauthenticated)
+  resources :results, only: [:index]
+
   # Defines the root path route ("/")
   root "sessions#new"
 end

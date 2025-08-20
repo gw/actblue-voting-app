@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
-const Vote = ({ userEmail }) => {
+const Vote = ({ userEmail, candidates }) => {
+  const [selectedCandidate, setSelectedCandidate] = useState("");
   const handleLogout = async (e) => {
     e.preventDefault();
     
@@ -41,17 +42,25 @@ const Vote = ({ userEmail }) => {
         <h2>Cast your vote today!</h2>
 
         <div className="candidates-section">
-          {/* Placeholder for candidate list - will be implemented in Stage 8 */}
-          <div className="candidate-item">
-            <input type="radio" id="candidate1" name="candidate" value="candidate1" />
-            <label htmlFor="candidate1">Cindy and The Scintillators</label>
-          </div>
-          <div className="candidate-item">
-            <input type="radio" id="candidate2" name="candidate" value="candidate2" />
-            <label htmlFor="candidate2">BTESS</label>
-          </div>
+          {candidates && candidates.map((candidate) => (
+            <div key={candidate.id} className="candidate-item">
+              <input 
+                type="radio" 
+                id={`candidate-${candidate.id}`} 
+                name="candidate" 
+                value={candidate.id}
+                checked={selectedCandidate === candidate.id.toString()}
+                onChange={(e) => setSelectedCandidate(e.target.value)}
+              />
+              <label htmlFor={`candidate-${candidate.id}`}>{candidate.name}</label>
+            </div>
+          ))}
 
-          <button className="vote-button" type="button">
+          <button 
+            className="vote-button" 
+            type="button"
+            disabled={!selectedCandidate}
+          >
             Vote
           </button>
         </div>
