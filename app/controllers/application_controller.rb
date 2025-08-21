@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_csrf_error
 
+  # Health check endpoint for fly.io
+  def health
+    render json: { status: 'healthy' }, status: :ok
+  end
+
   private
 
   def current_user
