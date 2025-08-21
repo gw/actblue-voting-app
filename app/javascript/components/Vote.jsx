@@ -144,6 +144,7 @@ const Vote = ({ userEmail, candidates }) => {
               type="text"
               placeholder="Enter name..."
               className="form-input write-in-input"
+              name="writeInInput"
               value={writeInName}
               onChange={(e) => setWriteInName(e.target.value)}
               disabled={isSubmittingWriteIn || isSubmitting}
