@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { getCsrfToken } from "../utils/csrf";
+import LogoutLink from "./LogoutLink";
 
 const Vote = ({ userEmail, candidates }) => {
   const [selectedCandidate, setSelectedCandidate] = useState("");
@@ -7,32 +8,6 @@ const Vote = ({ userEmail, candidates }) => {
   const [error, setError] = useState("");
   const [writeInName, setWriteInName] = useState("");
   const [isSubmittingWriteIn, setIsSubmittingWriteIn] = useState(false);
-
-  const handleLogout = async (e) => {
-    e.preventDefault();
-
-    try {
-      const csrfToken = getCsrfToken();
-
-      const response = await fetch('/logout', {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-Token': csrfToken,
-        },
-      });
-
-      if (response.redirected) {
-        window.location.href = response.url;
-      } else if (response.ok) {
-        // Fallback redirect to root if no redirect in response
-        window.location.href = '/';
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      // Fallback - still redirect to home
-      window.location.href = '/';
-    }
-  };
 
   const handleVote = async (e) => {
     e.preventDefault();
@@ -117,49 +92,53 @@ const Vote = ({ userEmail, candidates }) => {
       <header className="page-header">
         <h1>VOTE.WEBSITE</h1>
         <div className="user-info">
-          Signed in as {userEmail} (<a href="#" onClick={handleLogout} className="logout-link">Logout</a>)
+          Signed in as {userEmail} (<LogoutLink />)
         </div>
       </header>
 
       <div className="page-content">
         <h2>Cast your vote today!</h2>
 
-        <div className="candidates-section">
-          {error && (
-            <div className="alert alert-error" style={{ marginBottom: "20px" }}>
-              {error}
+        {error && (
+          <div className="alert alert-error" style={{ marginBottom: "20px" }}>
+            {error}
+          </div>
+        )}
+
+        {candidates && candidates.length > 0 && (
+          <>
+            <div className="candidates-section">
+              {candidates.map((candidate) => (
+                <div key={candidate.id} className="candidate-item">
+                  <input
+                    type="radio"
+                    id={`candidate-${candidate.id}`}
+                    name="candidate"
+                    value={candidate.id}
+                    checked={selectedCandidate === candidate.id.toString()}
+                    onChange={(e) => setSelectedCandidate(e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                  <label htmlFor={`candidate-${candidate.id}`}>{candidate.name}</label>
+                </div>
+              ))}
+
+              <button
+                className="button-primary"
+                type="button"
+                disabled={!selectedCandidate || isSubmitting}
+                onClick={handleVote}
+              >
+                {isSubmitting ? "Submitting..." : "Vote"}
+              </button>
             </div>
-          )}
 
-          {candidates && candidates.map((candidate) => (
-            <div key={candidate.id} className="candidate-item">
-              <input
-                type="radio"
-                id={`candidate-${candidate.id}`}
-                name="candidate"
-                value={candidate.id}
-                checked={selectedCandidate === candidate.id.toString()}
-                onChange={(e) => setSelectedCandidate(e.target.value)}
-                disabled={isSubmitting}
-              />
-              <label htmlFor={`candidate-${candidate.id}`}>{candidate.name}</label>
-            </div>
-          ))}
-
-          <button
-            className="button-primary"
-            type="button"
-            disabled={!selectedCandidate || isSubmitting}
-            onClick={handleVote}
-          >
-            {isSubmitting ? "Submitting..." : "Vote"}
-          </button>
-        </div>
-
-        <div className="separator"></div>
+            <div className="separator"></div>
+          </>
+        )}
 
         <div className="write-in-section">
-          <p>Or, add a new candidate:</p>
+          <p>{candidates && candidates.length > 0 ? "Or, add a new candidate:" : "Please add the first candidate:"}</p>
           <div className="write-in-form">
             <input
               type="text"

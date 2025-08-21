@@ -1,5 +1,6 @@
 <% content_for :title, "Voting Results" %>
 
 <%= react_component "Results", {
+  userEmail: current_user&.email,
   candidates: @candidates.map { |c| { id: c.id, name: c.name, vote_count: c.votes_count } }
 } %>

@@ -1,10 +1,14 @@
 import React from "react";
+import LogoutLink from "./LogoutLink";
 
-const Results = ({ candidates }) => {
+const Results = ({ candidates, userEmail }) => {
   return (
     <div className="page-container">
       <header className="page-header">
         <h1>VOTE.WEBSITE</h1>
+        <div className="user-info">
+          Signed in as {userEmail} (<LogoutLink />)
+        </div>
       </header>
 
       <div className="page-content">
