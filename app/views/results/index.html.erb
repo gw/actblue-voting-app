@@ -1,8 +1,5 @@
 <% content_for :title, "Voting Results" %>
 
-<%# Use c.votes_count (pre-calculated in controller query) instead of c.vote_count
-    (model method) to avoid N+1 queries. votes_count comes from the SELECT clause
-    in the controller's database query. %>
 <%= react_component "Results", {
   candidates: @candidates.map { |c| { id: c.id, name: c.name, vote_count: c.votes_count } }
 } %>
