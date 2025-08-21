@@ -53,19 +53,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#can_vote?' do
-    it 'returns true when user has not voted' do
-      user = User.create!(email: 'voter@example.com')
-      expect(user.can_vote?).to be true
-    end
-
-    it 'returns false when user has already voted' do
-      candidate = Candidate.create!(name: 'The Beatles')
-      user = User.create!(email: 'voter@example.com', voted_for_candidate: candidate)
-      expect(user.can_vote?).to be false
-    end
-  end
-
   describe '#can_add_candidate?' do
     before do
       Candidate.destroy_all
