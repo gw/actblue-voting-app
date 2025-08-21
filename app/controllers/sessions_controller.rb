@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :redirect_if_logged_in, only: [:new]
+
   def new
   end
 
@@ -23,6 +25,16 @@ class SessionsController < ApplicationController
   end
 
   private
+
+  def redirect_if_logged_in
+    if logged_in?
+      if current_user.voted_for_candidate_id.present?
+        redirect_to results_path
+      else
+        redirect_to votes_path
+      end
+    end
+  end
 
   def session_params
     params.require(:email)
