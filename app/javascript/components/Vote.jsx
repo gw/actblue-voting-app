@@ -1,21 +1,21 @@
 import React, { useState } from "react";
+import { getCsrfToken } from "../utils/csrf";
 
 const Vote = ({ userEmail, candidates }) => {
   const [selectedCandidate, setSelectedCandidate] = useState("");
   const handleLogout = async (e) => {
     e.preventDefault();
-    
+
     try {
-      // Get CSRF token from meta tag
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      
+      const csrfToken = getCsrfToken();
+
       const response = await fetch('/logout', {
         method: 'DELETE',
         headers: {
           'X-CSRF-Token': csrfToken,
         },
       });
-      
+
       if (response.redirected) {
         window.location.href = response.url;
       } else if (response.ok) {

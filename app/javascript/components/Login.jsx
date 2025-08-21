@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getCsrfToken } from "../utils/csrf";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -61,8 +62,7 @@ const Login = () => {
     setIsSubmitting(true);
     setServerError(''); // Clear any previous server errors
 
-    // Get CSRF token from meta tag
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    const csrfToken = getCsrfToken();
 
     const formDataToSubmit = new FormData();
     formDataToSubmit.append('email', formData.email);
