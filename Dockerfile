@@ -19,7 +19,14 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config
+    apt-get install --no-install-recommends -y build-essential git libvips pkg-config node-gyp python-is-python3 curl
+
+# Install Node.js 18 (required for Shakapacker)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Install yarn using corepack
+RUN corepack enable && corepack prepare yarn@stable --activate
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -27,14 +34,17 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
+# Install JavaScript dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
 # Copy application code
 COPY . .
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN SECRET_KEY_BASE=`bundle exec rails secret` ./bin/rails assets:precompile
 
 
 # Final stage for app image
@@ -42,7 +52,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips libjemalloc2 sqlite3 && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
