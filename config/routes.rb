@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   delete "logout", to: "sessions#destroy"
 
   # Voting routes
-  resources :votes, only: [:index]
+  resources :votes, only: [:index, :create]
 
   # Results routes (public, unauthenticated)
   resources :results, only: [:index]
