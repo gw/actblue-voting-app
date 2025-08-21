@@ -113,15 +113,15 @@ const Vote = ({ userEmail, candidates }) => {
   };
 
   return (
-    <div className="vote-container">
-      <header className="vote-header">
+    <div className="page-container">
+      <header className="page-header">
         <h1>VOTE.WEBSITE</h1>
         <div className="user-info">
           Signed in as {userEmail} (<a href="#" onClick={handleLogout} className="logout-link">Logout</a>)
         </div>
       </header>
 
-      <div className="vote-content">
+      <div className="page-content">
         <h2>Cast your vote today!</h2>
 
         <div className="candidates-section">
@@ -147,7 +147,7 @@ const Vote = ({ userEmail, candidates }) => {
           ))}
 
           <button
-            className="vote-button"
+            className="button-primary"
             type="button"
             disabled={!selectedCandidate || isSubmitting}
             onClick={handleVote}
@@ -164,13 +164,13 @@ const Vote = ({ userEmail, candidates }) => {
             <input
               type="text"
               placeholder="Enter name..."
-              className="write-in-input"
+              className="form-input write-in-input"
               value={writeInName}
               onChange={(e) => setWriteInName(e.target.value)}
               disabled={isSubmittingWriteIn || isSubmitting}
             />
-            <button 
-              className="vote-button" 
+            <button
+              className="button-primary"
               type="button"
               disabled={!writeInName.trim() || isSubmittingWriteIn || isSubmitting}
               onClick={handleWriteIn}

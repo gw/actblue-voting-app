@@ -103,12 +103,12 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <header className="login-header">
+    <div className="page-container">
+      <header className="page-header">
         <h1>VOTE.WEBSITE</h1>
       </header>
 
-      <div className="login-form-container">
+      <div className="page-content">
         <h2>Sign in to vote</h2>
 
         {serverError && (
@@ -164,7 +164,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="login-button"
+            className="button-primary"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Signing in...' : 'Sign in'}

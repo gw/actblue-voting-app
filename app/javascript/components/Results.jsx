@@ -2,14 +2,14 @@ import React from "react";
 
 const Results = ({ candidates }) => {
   return (
-    <div className="results-container">
-      <header className="results-header">
+    <div className="page-container">
+      <header className="page-header">
         <h1>VOTE.WEBSITE</h1>
       </header>
 
-      <div className="results-content">
+      <div className="page-content">
         <h2>Results</h2>
-        
+
         <div className="results-table-container">
           <table className="results-table">
             <thead>

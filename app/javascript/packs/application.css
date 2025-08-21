@@ -6,40 +6,43 @@ body {
     'Helvetica Neue', sans-serif;
 }
 
-/* Login page styles to match wireframe */
-.login-container {
+/* Unified page layout styles */
+.page-container {
   min-height: 100vh;
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
 }
 
-.login-header {
+.page-header {
   background-color: white;
   border-bottom: 2px solid #ddd;
   padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.login-header h1 {
+.page-header h1 {
   margin: 0;
   font-size: 24px;
   font-weight: normal;
   color: #333;
 }
 
-.login-form-container {
+.page-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   width: 100%;
 }
 
-.login-form-container h2 {
+.page-content h2 {
   font-size: 48px;
   font-weight: normal;
   color: #333;
@@ -108,7 +111,7 @@ body {
   border: 1px solid #f5c6cb;
 }
 
-.login-button {
+.button-primary {
   background-color: #000;
   color: white;
   border: none;
@@ -120,37 +123,13 @@ body {
   min-width: 120px;
 }
 
-.login-button:hover {
+.button-primary:hover {
   background-color: #333;
 }
 
-.login-button:disabled {
+.button-primary:disabled {
   background-color: #666;
   cursor: not-allowed;
-}
-
-/* Voting page styles to match wireframe */
-.vote-container {
-  min-height: 100vh;
-  background-color: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-}
-
-.vote-header {
-  background-color: white;
-  border-bottom: 2px solid #ddd;
-  padding: 20px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.vote-header h1 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: normal;
-  color: #333;
 }
 
 .user-info {
@@ -169,25 +148,6 @@ body {
   text-decoration: underline;
 }
 
-.vote-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.vote-content h2 {
-  font-size: 48px;
-  font-weight: normal;
-  color: #333;
-  margin-bottom: 40px;
-  text-align: center;
-}
 
 .candidates-section {
   width: 100%;
@@ -213,26 +173,6 @@ body {
   cursor: pointer;
 }
 
-.vote-button {
-  background-color: #000;
-  color: white;
-  border: none;
-  padding: 16px 32px;
-  font-size: 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 20px;
-  min-width: 120px;
-}
-
-.vote-button:hover {
-  background-color: #333;
-}
-
-.vote-button:disabled {
-  background-color: #666;
-  cursor: not-allowed;
-}
 
 .separator {
   width: 100%;
@@ -258,8 +198,7 @@ body {
   align-items: center;
 }
 
-.write-in-input {
-  flex: 1;
+.form-input {
   padding: 12px 16px;
   font-size: 16px;
   border: 2px solid #ccc;
@@ -268,59 +207,22 @@ body {
   background-color: white;
 }
 
-.write-in-input:focus {
+.form-input:focus {
   outline: none;
   border-color: #666;
 }
 
-.write-in-input::placeholder {
+.form-input::placeholder {
   color: #999;
 }
 
-.write-in-form .vote-button {
+.write-in-input {
+  flex: 1;
+}
+
+.write-in-form .button-primary {
   margin-top: 0;
   padding: 12px 24px;
-}
-
-/* Results page styles */
-.results-container {
-  min-height: 100vh;
-  background-color: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-}
-
-.results-header {
-  background-color: white;
-  border-bottom: 2px solid #ddd;
-  padding: 20px 40px;
-}
-
-.results-header h1 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: normal;
-  color: #333;
-}
-
-.results-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.results-content h2 {
-  font-size: 48px;
-  font-weight: normal;
-  color: #333;
-  margin-bottom: 40px;
-  text-align: center;
 }
 
 .results-table-container {
@@ -334,7 +236,7 @@ body {
   background-color: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .results-table th,
