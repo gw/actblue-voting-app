@@ -277,6 +277,11 @@ body {
   color: #999;
 }
 
+.write-in-form .vote-button {
+  margin-top: 0;
+  padding: 12px 24px;
+}
+
 /* Results page styles */
 .results-container {
   min-height: 100vh;

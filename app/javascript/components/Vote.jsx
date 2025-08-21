@@ -5,6 +5,8 @@ const Vote = ({ userEmail, candidates }) => {
   const [selectedCandidate, setSelectedCandidate] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [writeInName, setWriteInName] = useState("");
+  const [isSubmittingWriteIn, setIsSubmittingWriteIn] = useState(false);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -71,6 +73,45 @@ const Vote = ({ userEmail, candidates }) => {
     }
   };
 
+  const handleWriteIn = async (e) => {
+    e.preventDefault();
+
+    if (!writeInName.trim()) {
+      setError("Please enter a candidate name");
+      return;
+    }
+
+    setIsSubmittingWriteIn(true);
+    setError("");
+
+    try {
+      const csrfToken = getCsrfToken();
+
+      const response = await fetch('/candidates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify({ name: writeInName.trim() })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Redirect to results page
+        window.location.href = data.redirect_url;
+      } else {
+        setError(data.errors?.join(', ') || "An error occurred while adding your candidate");
+      }
+    } catch (error) {
+      console.error('Write-in submission error:', error);
+      setError("Network error. Please try again.");
+    } finally {
+      setIsSubmittingWriteIn(false);
+    }
+  };
+
   return (
     <div className="vote-container">
       <header className="vote-header">
@@ -124,9 +165,17 @@ const Vote = ({ userEmail, candidates }) => {
               type="text"
               placeholder="Enter name..."
               className="write-in-input"
+              value={writeInName}
+              onChange={(e) => setWriteInName(e.target.value)}
+              disabled={isSubmittingWriteIn || isSubmitting}
             />
-            <button className="vote-button" type="button">
-              Vote
+            <button 
+              className="vote-button" 
+              type="button"
+              disabled={!writeInName.trim() || isSubmittingWriteIn || isSubmitting}
+              onClick={handleWriteIn}
+            >
+              {isSubmittingWriteIn ? "Submitting..." : "Vote"}
             </button>
           </div>
         </div>

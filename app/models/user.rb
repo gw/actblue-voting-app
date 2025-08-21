@@ -6,8 +6,4 @@ class User < ApplicationRecord
   def has_voted?
     voted_for_candidate_id.present?
   end
-
-  def can_add_candidate?
-    !has_voted? && Candidate.count < 10
-  end
 end

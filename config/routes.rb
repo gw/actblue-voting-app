@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   # Voting routes
   resources :votes, only: [:index, :create]
 
+  # Candidate routes
+  resources :candidates, only: [:create]
+
   # Results routes (public, unauthenticated)
   resources :results, only: [:index]
 

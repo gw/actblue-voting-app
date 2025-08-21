@@ -52,28 +52,4 @@ RSpec.describe User, type: :model do
       expect(user.has_voted?).to be true
     end
   end
-
-  describe '#can_add_candidate?' do
-    before do
-      Candidate.destroy_all
-    end
-
-    it 'returns true when user has not voted and there are fewer than 10 candidates' do
-      5.times { |i| Candidate.create!(name: "Artist #{i}") }
-      user = User.create!(email: 'voter@example.com')
-      expect(user.can_add_candidate?).to be true
-    end
-
-    it 'returns false when user has already voted' do
-      candidate = Candidate.create!(name: 'Radiohead')
-      user = User.create!(email: 'voter@example.com', voted_for_candidate: candidate)
-      expect(user.can_add_candidate?).to be false
-    end
-
-    it 'returns false when there are already 10 candidates' do
-      10.times { |i| Candidate.create!(name: "Artist #{i}") }
-      user = User.create!(email: 'voter@example.com')
-      expect(user.can_add_candidate?).to be false
-    end
-  end
 end
