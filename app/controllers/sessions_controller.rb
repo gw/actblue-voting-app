@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_email] = nil
+    reset_session
     redirect_to root_path
   end
 
@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
 
   def redirect_if_logged_in
     if logged_in?
-      if current_user.voted_for_candidate_id.present?
+      if current_user.has_voted?
         redirect_to results_path
       else
         redirect_to votes_path

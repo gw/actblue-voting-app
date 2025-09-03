@@ -6,9 +6,11 @@ const Results = ({ candidates, userEmail }) => {
     <div className="page-container">
       <header className="page-header">
         <h1>VOTE.WEBSITE</h1>
-        <div className="user-info">
-          Signed in as {userEmail} (<LogoutLink />)
-        </div>
+        {userEmail && (
+          <div className="user-info">
+            Signed in as {userEmail} (<LogoutLink />)
+          </div>
+        )}
       </header>
 
       <div className="page-content">
