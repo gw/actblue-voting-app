@@ -21,18 +21,15 @@ class CandidatesController < ApplicationController
     # Create new candidate
     candidate = Candidate.new(name: candidate_name)
 
-    if candidate.save
-      # Auto-vote for the newly created candidate
-      if current_user.update(voted_for_candidate: candidate)
-        render json: { success: true, redirect_url: results_path }
-      else
-        # If auto-vote fails, delete the candidate to maintain consistency
-        candidate.destroy
-        render json: { success: false, errors: ["Unable to record your vote. Please try again."] }, status: :unprocessable_entity
+    begin
+      Candidate.transaction do
+        candidate.save!
+        current_user.update!(voted_for_candidate: candidate)
       end
-    else
-      # Handle validation errors (e.g., duplicate name)
-      render json: { success: false, errors: candidate.errors.full_messages }, status: :unprocessable_entity
+
+      render json: { success: true, redirect_url: results_path }
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { success: false, errors: e.record.errors.full_messages }, status: :unprocessable_entity
     end
   end
 end
