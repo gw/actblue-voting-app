@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user, :logged_in?
+  helper_method :current_user
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_csrf_error
 

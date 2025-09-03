@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_or_create_by(email: session_params[:email])
+    user = User.find_or_create_by(email: params.require(:email).downcase.strip)
 
     if user.persisted?
       session[:user_email] = user.email
@@ -34,10 +34,5 @@ class SessionsController < ApplicationController
         redirect_to votes_path
       end
     end
-  end
-
-  def session_params
-    params.require(:email)
-    { email: params.require(:email).downcase.strip }
   end
 end
